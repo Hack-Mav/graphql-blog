@@ -1,0 +1,50 @@
+type User {
+  id: ID!
+  username: String!
+  email: String!
+  role: UserRole!
+  createdAt: String!
+  updatedAt: String!
+}
+
+enum UserRole {
+  USER
+  ADMIN
+}
+
+type AuthPayload {
+  token: String!
+  user: User!
+}
+
+input CreateUserInput {
+  username: String!
+  email: String! @constraint(format: "email")
+  password: String! @constraint(minLength: 8)
+}
+
+input LoginInput {
+  email: String!
+  password: String!
+}
+
+type Query {
+  me: User @auth(requires: USER)
+  user(id: ID!): User @auth(requires: ADMIN)
+  users: [User!]! @auth(requires: ADMIN)
+}
+
+type Mutation {
+  register(input: CreateUserInput!): AuthPayload!
+  login(input: LoginInput!): AuthPayload!
+  updateUser(id: ID!, input: UpdateUserInput!): User! @auth(requires: USER)
+  deleteUser(id: ID!): Boolean! @auth(requires: ADMIN)
+}
+
+input UpdateUserInput {
+  username: String
+  email: String @constraint(format: "email")
+  password: String @constraint(minLength: 8)
+}
+
+directive @auth(requires: UserRole = USER) on FIELD_DEFINITION
