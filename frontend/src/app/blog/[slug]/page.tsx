@@ -1,61 +1,13 @@
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { Button } from '@/components/ui/button';
-import { ArrowLeft, Calendar, Clock, Tag } from 'lucide-react';
+import { ArrowLeft, Calendar, Clock, Tag, User } from 'lucide-react';
 import { markdownToHtml } from '@/lib/markdown';
 import { TableOfContents } from '@/components/blog/table-of-contents';
+import { stubPosts } from '@/data/stub-data';
 
-// This would typically come from your GraphQL API
 const getPostBySlug = async (slug: string) => {
-  // Simulate API call
-  const posts = [
-    {
-      id: '1',
-      slug: 'getting-started-with-graphql',
-      title: 'Getting Started with GraphQL',
-      content: `# Getting Started with GraphQL
-
-## What is GraphQL?
-GraphQL is a query language for your API that provides a more efficient, powerful, and flexible alternative to REST.
-
-## Key Features
-- **Efficient Data Loading**: Fetch exactly what you need in a single request
-- **Strongly Typed**: Every GraphQL API is defined by a schema
-- **Developer Experience**: Great tooling and auto-generated documentation
-
-## Basic Example
-\`\`\`graphql
-query GetUser($id: ID!) {
-  user(id: $id) {
-    id
-    name
-    email
-    posts {
-      title
-      publishedAt
-    }
-  }
-}
-\`\`\`
-
-## Next Steps
-- Set up a GraphQL server
-- Define your schema
-- Implement resolvers
-- Connect to your database
-
-## Conclusion
-GraphQL is a powerful tool for building modern APIs.`,
-      excerpt: 'Learn the basics of GraphQL and how to set up your first server with Apollo.',
-      category: 'Tutorial',
-      readTime: '5 min read',
-      date: '2023-06-15',
-      tags: ['graphql', 'api', 'tutorial']
-    },
-    // ... other posts
-  ];
-
-  return posts.find(post => post.slug === slug) || null;
+  return stubPosts.find(post => post.slug === slug) || null;
 };
 
 export default async function BlogPostPage({ params }: { params: { slug: string } }) {
@@ -68,7 +20,7 @@ export default async function BlogPostPage({ params }: { params: { slug: string 
   const content = await markdownToHtml(post.content);
 
   return (
-    <div className="container py-8">
+    <div className="container py-8 max-w-4xl mx-auto">
       <div className="mb-8">
         <Button variant="ghost" asChild>
           <Link href="/blog" className="group flex items-center">
@@ -79,7 +31,7 @@ export default async function BlogPostPage({ params }: { params: { slug: string 
       </div>
 
       <div className="grid grid-cols-1 gap-12 lg:grid-cols-[1fr_280px]">
-        <article className="prose max-w-none dark:prose-invert">
+        <article className="prose max-w-none dark:prose-invert text-left">
           <header className="mb-10">
             <div className="flex items-center space-x-4 text-sm text-muted-foreground mb-4">
               <span className="inline-flex items-center rounded-full bg-blue-100 px-2.5 py-0.5 text-xs font-medium text-blue-800 dark:bg-blue-900 dark:text-blue-200">
@@ -100,9 +52,17 @@ export default async function BlogPostPage({ params }: { params: { slug: string 
               </span>
             </div>
             
-            <h1 className="text-3xl font-extrabold tracking-tight sm:text-4xl md:text-5xl lg:text-6xl">
+            <h1 className="text-3xl font-extrabold tracking-tight sm:text-4xl md:text-5xl lg:text-6xl text-left">
               {post.title}
             </h1>
+            
+            <div className="mt-4 flex items-center gap-2 text-sm text-muted-foreground">
+              <User className="h-4 w-4" />
+              <span>By {post.author.name}</span>
+              {post.author.bio && (
+                <span className="text-muted-foreground">• {post.author.bio}</span>
+              )}
+            </div>
             
             {post.tags && post.tags.length > 0 && (
               <div className="mt-6 flex flex-wrap gap-2">
@@ -120,13 +80,13 @@ export default async function BlogPostPage({ params }: { params: { slug: string 
           </header>
 
           <div 
-            className="prose-lg max-w-none"
+            className="prose-lg max-w-none text-left"
             dangerouslySetInnerHTML={{ __html: content }}
           />
 
           <div className="mt-16 pt-8 border-t">
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-              <div>
+              <div className="text-left">
                 <h2 className="text-xl font-semibold">Enjoyed this article?</h2>
                 <p className="text-muted-foreground">
                   Share it with your friends or leave a comment below!

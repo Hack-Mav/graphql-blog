@@ -1,125 +1,115 @@
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card"
-import { ArrowRight, Calendar, Clock } from "lucide-react"
+import { ArrowRight, Calendar, Clock, User } from "lucide-react"
+import { stubPosts } from "@/data/stub-data"
 
-type BlogPost = {
-  id: string
-  title: string
-  excerpt: string
-  category: string
-  readTime: string
-  date: string
-  slug: string
-}
-
-const featuredPosts: BlogPost[] = [
-  {
-    id: '1',
-    title: 'Getting Started with GraphQL',
-    excerpt: 'Learn the basics of GraphQL and how to set up your first server with Apollo.',
-    category: 'Tutorial',
-    readTime: '5 min read',
-    date: '2023-06-15',
-    slug: 'getting-started-with-graphql'
-  },
-  {
-    id: '2',
-    title: 'Building Modern UIs with Next.js',
-    excerpt: 'Discover how to build fast and SEO-friendly web applications with Next.js 13+ features.',
-    category: 'Guide',
-    readTime: '8 min read',
-    date: '2023-06-10',
-    slug: 'building-modern-uis-with-nextjs'
-  },
-  {
-    id: '3',
-    title: 'Advanced TypeScript Patterns',
-    excerpt: 'Master advanced TypeScript patterns to write more maintainable and type-safe code.',
-    category: 'Tutorial',
-    readTime: '10 min read',
-    date: '2023-06-05',
-    slug: 'advanced-typescript-patterns'
-  }
-]
+const featuredPosts = stubPosts.filter(post => post.featured)
 
 export default function Home() {
   return (
     <div className="min-h-screen">
       {/* Hero Section */}
-      <section className="py-12 md:py-20 lg:py-28">
-        <div className="container px-4 md:px-6">
-          <div className="flex flex-col items-center space-y-6 text-center">
-            <div className="space-y-4">
-              <h1 className="text-4xl font-bold tracking-tighter sm:text-5xl md:text-6xl lg:text-7xl">
+      <section className="relative overflow-hidden py-12 sm:py-16 md:py-24 lg:py-32">
+        <div className="absolute inset-0 -z-10 overflow-hidden">
+          <div className="absolute inset-0 bg-gradient-to-b from-background/50 to-background" />
+          <div className="absolute left-1/2 top-0 h-[200%] w-full -translate-x-1/2 -translate-y-1/2 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-primary/5 via-background to-background" />
+        </div>
+        
+        <div className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="mx-auto max-w-4xl text-center">
+            <div className="space-y-6">
+              <h1 className="text-4xl font-bold tracking-tight sm:text-5xl md:text-6xl lg:text-7xl">
                 Welcome to the{' '}
                 <span className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
                   GraphQL Blog
                 </span>
               </h1>
-              <p className="mx-auto max-w-[700px] text-gray-500 md:text-xl dark:text-gray-400">
+              <p className="mx-auto max-w-2xl text-lg text-muted-foreground sm:text-xl">
                 Discover the latest articles, tutorials, and insights about web development, GraphQL, and modern JavaScript.
               </p>
-            </div>
-            <div className="flex flex-col gap-4 min-[400px]:flex-row">
-              <Button asChild size="lg">
-                <Link href="/blog">
-                  Read Blog Posts
-                  <ArrowRight className="ml-2 h-4 w-4" />
-                </Link>
-              </Button>
-              <Button variant="outline" size="lg" asChild>
-                <Link href="/about">Learn More</Link>
-              </Button>
+              <div className="flex flex-col items-center justify-center gap-4 sm:flex-row">
+                <Button asChild size="lg" className="w-full sm:w-auto">
+                  <Link href="/blog" className="group">
+                    Read Blog Posts
+                    <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
+                  </Link>
+                </Button>
+                <Button variant="outline" size="lg" className="w-full sm:w-auto" asChild>
+                  <Link href="/about">
+                    Learn More
+                  </Link>
+                </Button>
+              </div>
             </div>
           </div>
         </div>
       </section>
 
       {/* Featured Posts */}
-      <section className="py-12 bg-gray-50 dark:bg-gray-900">
-        <div className="container px-4 md:px-6">
-          <div className="mb-10 text-center">
-            <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl">Featured Posts</h2>
-            <p className="mx-auto mt-2 max-w-[700px] text-gray-500 md:text-lg dark:text-gray-400">
-              Check out our latest and greatest articles
+      <section className="bg-muted/40 py-16">
+        <div className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="mx-auto max-w-3xl text-center">
+            <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl">Featured Posts</h2>
+            <p className="mx-auto mt-3 max-w-2xl text-lg text-muted-foreground">
+              Explore our latest articles and tutorials on modern web development
             </p>
           </div>
 
-          <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+          <div className="mx-auto mt-12 grid max-w-7xl grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {featuredPosts.map((post) => (
-              <Card key={post.id} className="group overflow-hidden transition-all hover:shadow-lg dark:hover:shadow-gray-800/50">
-                <CardHeader>
-                  <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                    <span className="inline-flex items-center rounded-full bg-blue-100 px-2.5 py-0.5 text-xs font-medium text-blue-800 dark:bg-blue-900 dark:text-blue-200">
+              <Card 
+                key={post.id} 
+                className="group relative overflow-hidden transition-all duration-300 hover:shadow-lg hover:-translate-y-1 dark:border-border/50"
+              >
+                <div className="absolute inset-0 -z-10 bg-gradient-to-br from-background/50 via-background to-background opacity-0 transition-opacity group-hover:opacity-100" />
+                <CardHeader className="pb-3 text-left">
+                  <div className="flex flex-wrap items-center gap-2 text-sm">
+                    <span className="inline-flex items-center rounded-full bg-primary/10 px-3 py-1 text-xs font-medium text-primary">
                       {post.category}
                     </span>
-                    <span className="flex items-center">
-                      <Calendar className="mr-1 h-3.5 w-3.5" />
-                      {post.date}
-                    </span>
+                    <div className="flex items-center text-muted-foreground">
+                      <Calendar className="mr-1.5 h-3.5 w-3.5 flex-shrink-0" />
+                      <time dateTime={post.date} className="text-xs">
+                        {new Date(post.date).toLocaleDateString('en-US', {
+                          year: 'numeric',
+                          month: 'short',
+                          day: 'numeric'
+                        })}
+                      </time>
+                    </div>
                     <span>•</span>
-                    <span className="flex items-center">
-                      <Clock className="mr-1 h-3.5 w-3.5" />
-                      {post.readTime}
-                    </span>
+                    <div className="flex items-center text-muted-foreground">
+                      <Clock className="mr-1.5 h-3.5 w-3.5 flex-shrink-0" />
+                      <span className="text-xs">{post.readTime}</span>
+                    </div>
                   </div>
                 </CardHeader>
-                <CardContent>
-                  <h3 className="mb-2 text-xl font-semibold tracking-tight">
-                    <Link href={`/blog/${post.slug}`} className="hover:underline">
+                <CardContent className="pb-4 text-left">
+                  <h3 className="mt-4 text-lg font-semibold leading-tight tracking-tight text-left">
+                    <Link 
+                      href={`/blog/${post.slug}`}
+                      className="after:absolute after:inset-0 after:z-0 hover:underline focus:outline-none"
+                    >
                       {post.title}
                     </Link>
                   </h3>
-                  <p className="text-muted-foreground">{post.excerpt}</p>
+                  <p className="text-sm text-muted-foreground line-clamp-3 text-left">
+                    {post.excerpt}
+                  </p>
+                  <div className="mt-3 flex items-center gap-2 text-sm text-muted-foreground">
+                    <User className="h-3.5 w-3.5" />
+                    <span>{post.author.name}</span>
+                  </div>
                 </CardContent>
-                <CardFooter>
-                  <Button variant="link" className="p-0" asChild>
-                    <Link href={`/blog/${post.slug}`} className="group flex items-center">
-                      Read more
-                      <ArrowRight className="ml-1 h-4 w-4 transition-transform group-hover:translate-x-1" />
-                    </Link>
-                  </Button>
+                <CardFooter className="pt-0 text-left">
+                  <Link
+                    href={`/blog/${post.slug}`}
+                    className="group/link inline-flex items-center text-sm font-medium text-primary transition-colors hover:text-primary/80"
+                  >
+                    Read more
+                    <ArrowRight className="ml-1.5 h-4 w-4 transition-transform group-hover/link:translate-x-0.5" />
+                  </Link>
                 </CardFooter>
               </Card>
             ))}
@@ -138,8 +128,8 @@ export default function Home() {
 
       {/* CTA Section */}
       <section className="py-16 md:py-24 lg:py-32">
-        <div className="container px-4 md:px-6">
-          <div className="mx-auto max-w-3xl rounded-xl bg-gradient-to-r from-blue-600 to-purple-600 p-8 text-center text-white shadow-lg">
+        <div className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="mx-auto max-w-3xl rounded-2xl bg-gradient-to-r from-blue-600 to-purple-600 p-8 text-center text-white shadow-lg sm:p-10">
             <h2 className="mb-4 text-3xl font-bold tracking-tight sm:text-4xl">Ready to dive in?</h2>
             <p className="mb-6 text-lg text-blue-100 md:text-xl">
               Join our community of developers and stay updated with the latest content.
