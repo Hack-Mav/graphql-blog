@@ -1,14 +1,16 @@
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card"
-import { ArrowRight, Calendar, Clock, User } from "lucide-react"
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
+import { ArrowRight, Calendar, Clock, User, Info } from "lucide-react"
 import { stubPosts } from "@/data/stub-data"
 
 const featuredPosts = stubPosts.filter(post => post.featured)
 
 export default function Home() {
   return (
-    <div className="min-h-screen">
+    <TooltipProvider>
+      <div className="min-h-screen">
       {/* Hero Section */}
       <section className="relative overflow-hidden py-12 sm:py-16 md:py-24 lg:py-32">
         <div className="absolute inset-0 -z-10 overflow-hidden">
@@ -29,17 +31,31 @@ export default function Home() {
                 Discover the latest articles, tutorials, and insights about web development, GraphQL, and modern JavaScript.
               </p>
               <div className="flex flex-col items-center justify-center gap-4 sm:flex-row">
-                <Button asChild size="lg" className="w-full sm:w-auto">
-                  <Link href="/blog" className="group">
-                    Read Blog Posts
-                    <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
-                  </Link>
-                </Button>
-                <Button variant="outline" size="lg" className="w-full sm:w-auto" asChild>
-                  <Link href="/about">
-                    Learn More
-                  </Link>
-                </Button>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Button asChild size="lg" className="w-full sm:w-auto">
+                      <Link href="/blog" className="group">
+                        Read Blog Posts
+                        <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
+                      </Link>
+                    </Button>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p>Browse our latest articles and tutorials</p>
+                  </TooltipContent>
+                </Tooltip>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Button variant="outline" size="lg" className="w-full sm:w-auto" asChild>
+                      <Link href="/about">
+                        Learn More
+                      </Link>
+                    </Button>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p>Discover more about GraphQL Blog</p>
+                  </TooltipContent>
+                </Tooltip>
               </div>
             </div>
           </div>
@@ -65,24 +81,50 @@ export default function Home() {
                 <div className="absolute inset-0 -z-10 bg-gradient-to-br from-background/50 via-background to-background opacity-0 transition-opacity group-hover:opacity-100" />
                 <CardHeader className="pb-3 text-left">
                   <div className="flex flex-wrap items-center gap-2 text-sm">
-                    <span className="inline-flex items-center rounded-full bg-primary/10 px-3 py-1 text-xs font-medium text-primary">
-                      {post.category}
-                    </span>
-                    <div className="flex items-center text-muted-foreground">
-                      <Calendar className="mr-1.5 h-3.5 w-3.5 flex-shrink-0" />
-                      <time dateTime={post.date} className="text-xs">
-                        {new Date(post.date).toLocaleDateString('en-US', {
+                    <Tooltip>
+                      <TooltipTrigger>
+                        <span className="inline-flex items-center rounded-full bg-primary/10 px-3 py-1 text-xs font-medium text-primary cursor-help">
+                          {post.category}
+                        </span>
+                      </TooltipTrigger>
+                      <TooltipContent>
+                        <p>Category: {post.category}</p>
+                      </TooltipContent>
+                    </Tooltip>
+                    <Tooltip>
+                      <TooltipTrigger>
+                        <div className="flex items-center text-muted-foreground cursor-help">
+                          <Calendar className="mr-1.5 h-3.5 w-3.5 flex-shrink-0" />
+                          <time dateTime={post.date} className="text-xs">
+                            {new Date(post.date).toLocaleDateString('en-US', {
+                              year: 'numeric',
+                              month: 'short',
+                              day: 'numeric'
+                            })}
+                          </time>
+                        </div>
+                      </TooltipTrigger>
+                      <TooltipContent>
+                        <p>Published on {new Date(post.date).toLocaleDateString('en-US', {
+                          weekday: 'long',
                           year: 'numeric',
-                          month: 'short',
+                          month: 'long',
                           day: 'numeric'
-                        })}
-                      </time>
-                    </div>
+                        })}</p>
+                      </TooltipContent>
+                    </Tooltip>
                     <span>•</span>
-                    <div className="flex items-center text-muted-foreground">
-                      <Clock className="mr-1.5 h-3.5 w-3.5 flex-shrink-0" />
-                      <span className="text-xs">{post.readTime}</span>
-                    </div>
+                    <Tooltip>
+                      <TooltipTrigger>
+                        <div className="flex items-center text-muted-foreground cursor-help">
+                          <Clock className="mr-1.5 h-3.5 w-3.5 flex-shrink-0" />
+                          <span className="text-xs">{post.readTime}</span>
+                        </div>
+                      </TooltipTrigger>
+                      <TooltipContent>
+                        <p>Estimated reading time: {post.readTime}</p>
+                      </TooltipContent>
+                    </Tooltip>
                   </div>
                 </CardHeader>
                 <CardContent className="pb-4 text-left">
@@ -98,30 +140,53 @@ export default function Home() {
                     {post.excerpt}
                   </p>
                   <div className="mt-3 flex items-center gap-2 text-sm text-muted-foreground">
-                    <User className="h-3.5 w-3.5" />
-                    <span>{post.author.name}</span>
+                    <Tooltip>
+                      <TooltipTrigger>
+                        <div className="flex items-center gap-2 cursor-help">
+                          <User className="h-3.5 w-3.5" />
+                          <span>{post.author.name}</span>
+                        </div>
+                      </TooltipTrigger>
+                      <TooltipContent>
+                        <p>Written by {post.author.name}</p>
+                      </TooltipContent>
+                    </Tooltip>
                   </div>
                 </CardContent>
                 <CardFooter className="pt-0 text-left">
-                  <Link
-                    href={`/blog/${post.slug}`}
-                    className="group/link inline-flex items-center text-sm font-medium text-primary transition-colors hover:text-primary/80"
-                  >
-                    Read more
-                    <ArrowRight className="ml-1.5 h-4 w-4 transition-transform group-hover/link:translate-x-0.5" />
-                  </Link>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <Link
+                        href={`/blog/${post.slug}`}
+                        className="group/link inline-flex items-center text-sm font-medium text-primary transition-colors hover:text-primary/80"
+                      >
+                        Read more
+                        <ArrowRight className="ml-1.5 h-4 w-4 transition-transform group-hover/link:translate-x-0.5" />
+                      </Link>
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      <p>Read the full article: {post.title}</p>
+                    </TooltipContent>
+                  </Tooltip>
                 </CardFooter>
               </Card>
             ))}
           </div>
 
           <div className="mt-12 text-center">
-            <Button variant="outline" size="lg" asChild>
-              <Link href="/blog" className="group">
-                View All Posts
-                <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
-              </Link>
-            </Button>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button variant="outline" size="lg" asChild>
+                  <Link href="/blog" className="group">
+                    View All Posts
+                    <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
+                  </Link>
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>Explore all blog posts and articles</p>
+              </TooltipContent>
+            </Tooltip>
           </div>
         </div>
       </section>
@@ -135,16 +200,31 @@ export default function Home() {
               Join our community of developers and stay updated with the latest content.
             </p>
             <div className="flex flex-col gap-4 sm:flex-row sm:justify-center">
-              <Button size="lg" variant="secondary" className="bg-white text-blue-600 hover:bg-blue-50">
-                Get Started
-              </Button>
-              <Button size="lg" variant="outline" className="border-white text-white hover:bg-white/10">
-                Learn More
-              </Button>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button size="lg" variant="secondary" className="bg-white text-blue-600 hover:bg-blue-50">
+                    Get Started
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p>Start your journey with GraphQL Blog</p>
+                </TooltipContent>
+              </Tooltip>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button size="lg" variant="outline" className="border-white text-white hover:bg-white/10">
+                    Learn More
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p>Discover more features and content</p>
+                </TooltipContent>
+              </Tooltip>
             </div>
           </div>
         </div>
       </section>
     </div>
+    </TooltipProvider>
   )
 }
