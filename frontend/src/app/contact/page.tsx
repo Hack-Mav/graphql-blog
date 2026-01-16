@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
 import { ArrowLeft, Mail, Phone, MapPin, Send } from 'lucide-react'
 import { useToast } from '@/components/ui/use-toast'
 
@@ -42,14 +43,22 @@ export default function ContactPage() {
   }
 
   return (
-    <div className="container py-8">
+    <TooltipProvider>
+      <div className="container py-8">
       <div className="mb-8">
-        <Button variant="ghost" asChild>
-          <Link href="/" className="group flex items-center">
-            <ArrowLeft className="mr-2 h-4 w-4 transition-transform group-hover:-translate-x-1" />
-            Back to Home
-          </Link>
-        </Button>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Button variant="ghost" asChild>
+              <Link href="/" className="group flex items-center">
+                <ArrowLeft className="mr-2 h-4 w-4 transition-transform group-hover:-translate-x-1" />
+                Back to Home
+              </Link>
+            </Button>
+          </TooltipTrigger>
+          <TooltipContent>
+            <p>Return to homepage</p>
+          </TooltipContent>
+        </Tooltip>
       </div>
 
       <div className="mx-auto max-w-4xl">
@@ -70,67 +79,102 @@ export default function ContactPage() {
               <form onSubmit={handleSubmit} className="space-y-4">
                 <div className="space-y-2">
                   <Label htmlFor="name">Name</Label>
-                  <Input
-                    id="name"
-                    name="name"
-                    type="text"
-                    value={formData.name}
-                    onChange={handleChange}
-                    required
-                    placeholder="Your name"
-                  />
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <Input
+                        id="name"
+                        name="name"
+                        type="text"
+                        value={formData.name}
+                        onChange={handleChange}
+                        required
+                        placeholder="Your name"
+                      />
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      <p>Enter your full name</p>
+                    </TooltipContent>
+                  </Tooltip>
                 </div>
                 
                 <div className="space-y-2">
                   <Label htmlFor="email">Email</Label>
-                  <Input
-                    id="email"
-                    name="email"
-                    type="email"
-                    value={formData.email}
-                    onChange={handleChange}
-                    required
-                    placeholder="your@email.com"
-                  />
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <Input
+                        id="email"
+                        name="email"
+                        type="email"
+                        value={formData.email}
+                        onChange={handleChange}
+                        required
+                        placeholder="your@email.com"
+                      />
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      <p>Enter your email address</p>
+                    </TooltipContent>
+                  </Tooltip>
                 </div>
                 
                 <div className="space-y-2">
                   <Label htmlFor="subject">Subject</Label>
-                  <Input
-                    id="subject"
-                    name="subject"
-                    type="text"
-                    value={formData.subject}
-                    onChange={handleChange}
-                    required
-                    placeholder="How can we help?"
-                  />
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <Input
+                        id="subject"
+                        name="subject"
+                        type="text"
+                        value={formData.subject}
+                        onChange={handleChange}
+                        required
+                        placeholder="How can we help?"
+                      />
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      <p>Enter the subject of your message</p>
+                    </TooltipContent>
+                  </Tooltip>
                 </div>
                 
                 <div className="space-y-2">
                   <Label htmlFor="message">Message</Label>
-                  <textarea
-                    id="message"
-                    name="message"
-                    value={formData.message}
-                    onChange={handleChange}
-                    required
-                    rows={5}
-                    className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-                    placeholder="Tell us more about your inquiry..."
-                  />
+                  <Tooltip>
+                    <TooltipTrigger>
+                      <textarea
+                        id="message"
+                        name="message"
+                        value={formData.message}
+                        onChange={handleChange}
+                        required
+                        rows={5}
+                        className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                        placeholder="Tell us more about your inquiry..."
+                      />
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      <p>Describe your inquiry in detail</p>
+                    </TooltipContent>
+                  </Tooltip>
                 </div>
                 
-                <Button type="submit" className="w-full" disabled={isSubmitting}>
-                  {isSubmitting ? (
-                    'Sending...'
-                  ) : (
-                    <>
-                      <Send className="mr-2 h-4 w-4" />
-                      Send Message
-                    </>
-                  )}
-                </Button>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Button type="submit" className="w-full" disabled={isSubmitting}>
+                      {isSubmitting ? (
+                        'Sending...'
+                      ) : (
+                        <>
+                          <Send className="mr-2 h-4 w-4" />
+                          Send Message
+                        </>
+                      )}
+                    </Button>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p>{isSubmitting ? 'Sending your message...' : 'Send your message to us'}</p>
+                  </TooltipContent>
+                </Tooltip>
               </form>
             </CardContent>
           </Card>
@@ -145,9 +189,18 @@ export default function ContactPage() {
                 </CardTitle>
               </CardHeader>
               <CardContent className="text-left">
-                <p className="text-muted-foreground">Get in touch via email</p>
-                <p className="font-medium">contact@graphqlblog.com</p>
-                <p className="font-medium">support@graphqlblog.com</p>
+                <Tooltip>
+                  <TooltipTrigger>
+                    <div className="cursor-help">
+                      <p className="text-muted-foreground">Get in touch via email</p>
+                      <p className="font-medium">contact@graphqlblog.com</p>
+                      <p className="font-medium">support@graphqlblog.com</p>
+                    </div>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p>Click to copy email addresses</p>
+                  </TooltipContent>
+                </Tooltip>
               </CardContent>
             </Card>
 
@@ -159,9 +212,18 @@ export default function ContactPage() {
                 </CardTitle>
               </CardHeader>
               <CardContent className="text-left">
-                <p className="text-muted-foreground">Call us during business hours</p>
-                <p className="font-medium">+1 (555) 123-4567</p>
-                <p className="text-sm text-muted-foreground">Mon-Fri, 9AM-5PM EST</p>
+                <Tooltip>
+                  <TooltipTrigger>
+                    <div className="cursor-help">
+                      <p className="text-muted-foreground">Call us during business hours</p>
+                      <p className="font-medium">+1 (555) 123-4567</p>
+                      <p className="text-sm text-muted-foreground">Mon-Fri, 9AM-5PM EST</p>
+                    </div>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p>Available Monday-Friday, 9AM-5PM EST</p>
+                  </TooltipContent>
+                </Tooltip>
               </CardContent>
             </Card>
 
@@ -173,10 +235,19 @@ export default function ContactPage() {
                 </CardTitle>
               </CardHeader>
               <CardContent className="text-left">
-                <p className="font-medium">GraphQL Blog Inc.</p>
-                <p className="text-muted-foreground">123 Web Developer Street</p>
-                <p className="text-muted-foreground">Tech City, TC 12345</p>
-                <p className="text-muted-foreground">United States</p>
+                <Tooltip>
+                  <TooltipTrigger>
+                    <div className="cursor-help">
+                      <p className="font-medium">GraphQL Blog Inc.</p>
+                      <p className="text-muted-foreground">123 Web Developer Street</p>
+                      <p className="text-muted-foreground">Tech City, TC 12345</p>
+                      <p className="text-muted-foreground">United States</p>
+                    </div>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p>Our main office location</p>
+                  </TooltipContent>
+                </Tooltip>
               </CardContent>
             </Card>
 
@@ -203,5 +274,6 @@ export default function ContactPage() {
         </div>
       </div>
     </div>
+    </TooltipProvider>
   )
 }

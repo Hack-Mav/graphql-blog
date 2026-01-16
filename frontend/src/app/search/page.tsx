@@ -8,6 +8,7 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Badge } from '@/components/ui/badge'
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
 import { ArrowRight, Calendar, Clock, Search, User, FileText } from 'lucide-react'
 import { searchStubData, BlogPost, User as UserType } from '@/data/stub-data'
 
@@ -42,22 +43,39 @@ function SearchPageContent() {
   }
 
   return (
-    <div className="container py-8">
+    <TooltipProvider>
+      <div className="container py-8">
       <div className="mx-auto max-w-4xl">
         <div className="mb-8 text-left">
           <h1 className="text-3xl font-bold tracking-tight mb-4">Search</h1>
           <form onSubmit={handleSubmit} className="relative max-w-2xl">
-            <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-            <Input
-              type="search"
-              placeholder="Search posts, users, and content..."
-              value={query}
-              onChange={(e) => setQuery(e.target.value)}
-              className="w-full rounded-lg bg-background pl-9 pr-4 text-lg"
-            />
-            <Button type="submit" className="absolute right-2 top-1/2 -translate-y-1/2" size="sm">
-              Search
-            </Button>
+            <Tooltip>
+              <TooltipTrigger>
+                <div className="relative">
+                  <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+                  <Input
+                    type="search"
+                    placeholder="Search posts, users, and content..."
+                    value={query}
+                    onChange={(e) => setQuery(e.target.value)}
+                    className="w-full rounded-lg bg-background pl-9 pr-4 text-lg"
+                  />
+                </div>
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>Search by title, content, or author name</p>
+              </TooltipContent>
+            </Tooltip>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button type="submit" className="absolute right-2 top-1/2 -translate-y-1/2" size="sm">
+                  Search
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>Click to search or press Enter</p>
+              </TooltipContent>
+            </Tooltip>
           </form>
         </div>
 
@@ -87,20 +105,46 @@ function SearchPageContent() {
                     <Card key={post.id} className="group">
                       <CardHeader className="text-left">
                         <div className="flex flex-wrap items-center gap-2 text-sm text-muted-foreground">
-                          <Badge variant="secondary">{post.category}</Badge>
-                          <span className="flex items-center">
-                            <Calendar className="mr-1 h-3.5 w-3.5" />
-                            {new Date(post.date).toLocaleDateString('en-US', {
-                              year: 'numeric',
-                              month: 'short',
-                              day: 'numeric'
-                            })}
-                          </span>
+                          <Tooltip>
+                            <TooltipTrigger>
+                              <Badge variant="secondary" className="cursor-help">{post.category}</Badge>
+                            </TooltipTrigger>
+                            <TooltipContent>
+                              <p>Category: {post.category}</p>
+                            </TooltipContent>
+                          </Tooltip>
+                          <Tooltip>
+                            <TooltipTrigger>
+                              <span className="flex items-center cursor-help">
+                                <Calendar className="mr-1 h-3.5 w-3.5" />
+                                {new Date(post.date).toLocaleDateString('en-US', {
+                                  year: 'numeric',
+                                  month: 'short',
+                                  day: 'numeric'
+                                })}
+                              </span>
+                            </TooltipTrigger>
+                            <TooltipContent>
+                              <p>Published on {new Date(post.date).toLocaleDateString('en-US', {
+                                weekday: 'long',
+                                year: 'numeric',
+                                month: 'long',
+                                day: 'numeric'
+                              })}</p>
+                            </TooltipContent>
+                          </Tooltip>
                           <span>•</span>
-                          <span className="flex items-center">
-                            <Clock className="mr-1 h-3.5 w-3.5" />
-                            {post.readTime}
-                          </span>
+                          <Tooltip>
+                            <TooltipTrigger>
+                              <span className="flex items-center cursor-help">
+                                <Clock className="mr-1 h-3.5 w-3.5" />
+                                {post.readTime}
+                              </span>
+                            </TooltipTrigger>
+                            <TooltipContent>
+                              <p>Estimated reading time: {post.readTime}</p>
+                            </TooltipContent>
+                          </Tooltip>
                         </div>
                       </CardHeader>
                       <CardContent className="text-left">
@@ -111,26 +155,49 @@ function SearchPageContent() {
                         </h3>
                         <p className="text-muted-foreground mb-3 text-left">{post.excerpt}</p>
                         <div className="flex items-center gap-2 text-sm text-muted-foreground mb-3">
-                          <User className="h-3.5 w-3.5" />
-                          <span>By {post.author.name}</span>
+                          <Tooltip>
+                            <TooltipTrigger>
+                              <div className="flex items-center gap-2 cursor-help">
+                                <User className="h-3.5 w-3.5" />
+                                <span>By {post.author.name}</span>
+                              </div>
+                            </TooltipTrigger>
+                            <TooltipContent>
+                              <p>Written by {post.author.name}</p>
+                            </TooltipContent>
+                          </Tooltip>
                         </div>
                         {post.tags.length > 0 && (
                           <div className="flex flex-wrap gap-1">
                             {post.tags.map((tag) => (
-                              <Badge key={tag} variant="outline" className="text-xs">
-                                #{tag}
-                              </Badge>
+                              <Tooltip key={tag}>
+                                <TooltipTrigger>
+                                  <Badge variant="outline" className="text-xs cursor-help">
+                                    #{tag}
+                                  </Badge>
+                                </TooltipTrigger>
+                                <TooltipContent>
+                                  <p>Tag: {tag}</p>
+                                </TooltipContent>
+                              </Tooltip>
                             ))}
                           </div>
                         )}
                       </CardContent>
                       <CardFooter className="text-left">
-                        <Button variant="link" className="p-0" asChild>
-                          <Link href={`/blog/${post.slug}`} className="group flex items-center">
-                            Read more
-                            <ArrowRight className="ml-1 h-4 w-4 transition-transform group-hover:translate-x-1" />
-                          </Link>
-                        </Button>
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <Button variant="link" className="p-0" asChild>
+                              <Link href={`/blog/${post.slug}`} className="group flex items-center">
+                                Read more
+                                <ArrowRight className="ml-1 h-4 w-4 transition-transform group-hover:translate-x-1" />
+                              </Link>
+                            </Button>
+                          </TooltipTrigger>
+                          <TooltipContent>
+                            <p>Read the full article: {post.title}</p>
+                          </TooltipContent>
+                        </Tooltip>
                       </CardFooter>
                     </Card>
                   ))}
@@ -148,25 +215,33 @@ function SearchPageContent() {
                   {results.users.map((user: UserType) => (
                     <Card key={user.id} className="group">
                       <CardContent className="pt-6">
-                        <div className="flex items-center gap-3">
-                          {user.avatar && (
-                            <img
-                              src={user.avatar}
-                              alt={user.name}
-                              className="h-12 w-12 rounded-full object-cover"
-                            />
-                          )}
-                          <div className="flex-1">
-                            <h3 className="font-semibold">{user.name}</h3>
-                            <p className="text-sm text-muted-foreground">{user.email}</p>
-                            {user.bio && (
-                              <p className="text-sm text-muted-foreground mt-1">{user.bio}</p>
-                            )}
-                            <Badge variant="outline" className="mt-2 text-xs">
-                              {user.role}
-                            </Badge>
-                          </div>
-                        </div>
+                <Tooltip>
+                  <TooltipTrigger>
+                    <div className="flex items-center gap-3 cursor-help">
+                      {user.avatar && (
+                        <img
+                          src={user.avatar}
+                          alt={user.name}
+                          className="h-12 w-12 rounded-full object-cover"
+                        />
+                      )}
+                      <div className="flex-1">
+                        <h3 className="font-semibold">{user.name}</h3>
+                        <p className="text-sm text-muted-foreground">{user.email}</p>
+                        {user.bio && (
+                          <p className="text-sm text-muted-foreground mt-1">{user.bio}</p>
+                        )}
+                        <Badge variant="outline" className="mt-2 text-xs">
+                          {user.role}
+                        </Badge>
+                      </div>
+                    </div>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p>{user.name} - {user.role}</p>
+                    {user.bio && <p className="text-xs">{user.bio}</p>}
+                  </TooltipContent>
+                </Tooltip>
                       </CardContent>
                     </Card>
                   ))}
@@ -181,9 +256,16 @@ function SearchPageContent() {
                 <p className="text-muted-foreground mb-4">
                   Try searching with different keywords or check your spelling.
                 </p>
-                <Button variant="outline" asChild>
-                  <Link href="/blog">Browse all posts</Link>
-                </Button>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Button variant="outline" asChild>
+                      <Link href="/blog">Browse all posts</Link>
+                    </Button>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p>View all available blog posts</p>
+                  </TooltipContent>
+                </Tooltip>
               </div>
             )}
 
@@ -198,17 +280,24 @@ function SearchPageContent() {
                   <p className="text-sm font-medium">Try searching for:</p>
                   <div className="flex flex-wrap gap-2">
                     {['GraphQL', 'React', 'TypeScript', 'Next.js', 'Tutorial'].map((term) => (
-                      <Button
-                        key={term}
-                        variant="outline"
-                        size="sm"
-                        onClick={() => {
-                          setQuery(term)
-                          performSearch(term)
-                        }}
-                      >
-                        {term}
-                      </Button>
+                      <Tooltip key={term}>
+                        <TooltipTrigger asChild>
+                          <Button
+                            key={term}
+                            variant="outline"
+                            size="sm"
+                            onClick={() => {
+                              setQuery(term)
+                              performSearch(term)
+                            }}
+                          >
+                            {term}
+                          </Button>
+                        </TooltipTrigger>
+                        <TooltipContent>
+                          <p>Search for "{term}"</p>
+                        </TooltipContent>
+                      </Tooltip>
                     ))}
                   </div>
                 </div>
@@ -218,6 +307,7 @@ function SearchPageContent() {
         )}
       </div>
     </div>
+    </TooltipProvider>
   )
 }
 
